@@ -6,22 +6,44 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
   },
   "dependencies": {
+    "@google/genai": "^0.7.0",
+    "@heroui/react": "2.7.6-beta.2",
+    "@iconify/react": "^5.2.0",
+    "@internationalized/date": "^3.7.0",
+    "@lobehub/icons": "^1.93.0",
+    "@react-aria/i18n": "^3.12.7",
+    "dayjs": "^1.11.13",
+    "framer-motion": "^12.5.0",
+    "mongoose": "^8.13.0",
+    "next": "15.2.3",
+    "next-themes": "^0.4.6",
+    "openai": "^4.89.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.2.3"
+    "react-markdown": "^10.1.0",
+    "react-vertical-timeline-component": "^3.5.3"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "@types/react-vertical-timeline-component": "^3.3.6",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@heroui/shared-utils",
+      "react-vertical-timeline-component",
+      "sharp"
+    ]
   }
 }
