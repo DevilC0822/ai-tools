@@ -81,7 +81,7 @@ const Header = ({ className = '' }: HeaderProps) => {
             color='primary'
             className="text-2xl"
             as={NextLink}
-            href="https://github.com/DevilC0822"
+            href="https://github.com/DevilC0822/ai-tools"
             target="_blank"
             radius="full"
             isIconOnly

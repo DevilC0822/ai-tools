@@ -1,5 +1,5 @@
 'use client';
-import { Card, CardBody, CardHeader, Accordion, AccordionItem, Button } from '@heroui/react';
+import { Card, CardBody, CardHeader, Accordion, AccordionItem, Button, cn } from '@heroui/react';
 import { models } from '@/config/models';
 import { tools } from '@/config/tools';
 import { useRouter } from 'next/navigation';
@@ -40,7 +40,7 @@ export default function IntroductionLayout({ children }: { children: React.React
         <CardHeader>
           <Button
             color={pathname === '/introduction' ? 'primary' : 'default'}
-            variant='light'
+            variant={pathname === '/introduction' ? 'solid' : 'light'}
             className='w-full'
             onPress={() => router.push('/introduction')}>
             <span className='text-2xl font-bold'>指南</span>
@@ -50,11 +50,18 @@ export default function IntroductionLayout({ children }: { children: React.React
           <Accordion defaultExpandedKeys={Object.keys(introductionMap)} selectionMode='multiple'>
             {
               Object.keys(introductionMap).map((key) => (
-                <AccordionItem key={key} aria-label={introductionMap[key].label} title={introductionMap[key].label}>
+                <AccordionItem key={key} aria-label={introductionMap[key].label} title={
+                  <span className={
+                    cn(
+                      'text-2xl font-bold',
+                      pathname.includes(key) ? 'text-primary' : 'text-default-foreground',
+                    )
+                  }>{introductionMap[key].label}</span>
+                }>
                   {introductionMap[key].children.map((item) => (
                     <Button
                       color={pathname.slice(pathname.lastIndexOf('/') + 1) === item.key ? 'primary' : 'default'}
-                      variant='light'
+                      variant={pathname.slice(pathname.lastIndexOf('/') + 1) === item.key ? 'solid' : 'light'}
                       className='w-full'
                       key={item.key}
                       onPress={() => onGoIntroduction(key as 'tool' | 'model', item.key)}>

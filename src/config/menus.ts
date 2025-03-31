@@ -21,7 +21,7 @@ export const menus = [
   },
   {
     title: 'GitHub',
-    key: 'https://github.com/DevilC0822',
+    key: 'https://github.com/DevilC0822/ai-tools',
     icon: 'mdi:github',
     isExternal: true,
   },

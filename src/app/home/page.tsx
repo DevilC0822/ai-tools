@@ -40,7 +40,7 @@ export default function Home() {
     <div className="mt-2">
       <main className="flex flex-col items-center rounded-2xl md:rounded-3xl px-6">
         <section className="z-20 my-14 flex flex-col items-center justify-center gap-[18px] max-md:gap-4">
-          <div className="text-4xl font-bold tracking-tighter flex max-md:flex-col items-center justify-center">由 &nbsp;<AuroraText className='text-6xl max-md:text-4xl'>人工智能</AuroraText>&nbsp; 驱动</div>
+          <div className="text-4xl font-bold tracking-tighter flex max-md:flex-col items-center justify-center">由 &nbsp;<AuroraText className='text-6xl max-md:text-4xl'>大语言模型</AuroraText>&nbsp; 驱动</div>
           <div className="bg-gradient-to-br from-[#2c3b13] to-[#a1c2ea] bg-clip-text text-4xl max-md:text-2xl font-extrabold text-transparent">
             模型来自于
           </div>
@@ -50,7 +50,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-6">
             <Button
-              className="h-10 w-[163px] bg-default-foreground px-[16px] py-[10px] text-small font-medium leading-5 text-background"
+              className="h-10 w-[163px] bg-primary px-[16px] py-[10px] text-small font-medium leading-5 text-background"
               radius="full"
               as={NextLink}
               href="/tools"
