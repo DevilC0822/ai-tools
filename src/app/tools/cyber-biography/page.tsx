@@ -198,9 +198,9 @@ export default function CyberFortuneTellingPage() {
                         key={item.title}
                         contentStyle={{ boxShadow: '1px 1px 1px 1px #7761da', border: '1px solid #7761da', borderRadius: '10px' }}
                         contentArrowStyle={{ borderRight: '7px solid  #000' }}
-                        date={screenWidth <= 1169 ? '' : `${item.year}年`}
+                        date={screenWidth <= 1169 ? '' : `${item.year}`}
                         icon={<div className="text-lg max-md:text-sm font-bold text-center">
-                          <span className='text-nowrap'>{screenWidth <= 1169 ? <p>{item.year}年</p> : index + 1}</span>
+                          <span className='text-nowrap'>{screenWidth <= 1169 ? <p>{item.year}</p> : index + 1}</span>
                         </div>}
                       >
                         <h3 className="text-lg font-bold">{item.title}</h3>

@@ -127,7 +127,7 @@ export default function UsagePage() {
           <Table
             rowHeight={60}
             isStriped
-            className="min-w-[620px]"
+            className="min-w-[880px]"
             aria-label="使用统计"
             bottomContent={
               <div className='flex justify-end mt-2'>
@@ -146,10 +146,10 @@ export default function UsagePage() {
           >
             <TableHeader>
               <TableColumn width={200} key="id">ID</TableColumn>
-              <TableColumn width={120} key="type">工具</TableColumn>
-              <TableColumn width={180} key="model">模型</TableColumn>
+              <TableColumn width={140} key="type">工具</TableColumn>
+              <TableColumn width={200} key="model">模型</TableColumn>
               <TableColumn width={120} key="usage">使用量</TableColumn>
-              <TableColumn width={120} key="createTime">创建时间</TableColumn>
+              <TableColumn width={180} key="createTime">创建时间</TableColumn>
             </TableHeader>
             <TableBody isLoading={loading} loadingContent={<Spinner color="primary" label="Loading..." />}>
               {usageList?.map((usage) => (
