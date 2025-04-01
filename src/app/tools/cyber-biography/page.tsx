@@ -72,29 +72,35 @@ export default function CyberFortuneTellingPage() {
       });
       return;
     }
-    parseReadableStream(stream, {
-      output: 'json',
-      onStart: () => {
-        setIsStreaming(true);
-      },
-      onEnd: () => {
-        setIsStreaming(false);
-      },
-      onchange: (thinking) => {
-        setReasoningContent(thinking);
-      },
-      onThinkingStart: () => {
-        setIsReasoning(true);
-        setIsStreaming(false);
-      },
-      onThinkingEnd: () => {
-        setIsReasoning(false);
-        setIsStreaming(true); // 如果是思考模型，则在思考结束时才开始生成并解析 json
-      },
-      onResult: (_thinking, result) => {
-        setResult(result as Result);
-      },
-    });
+    try {
+      parseReadableStream(stream, {
+        output: 'json',
+        onStart: () => {
+          setIsStreaming(true);
+        },
+        onchange: (thinking) => {
+          setReasoningContent(thinking);
+        },
+        onThinkingStart: () => {
+          setIsReasoning(true);
+          setIsStreaming(false);
+        },
+        onThinkingEnd: () => {
+          setIsReasoning(false);
+          setIsStreaming(true); // 如果是思考模型，则在思考结束时才开始生成并解析 json
+        },
+        onEnd: (_thinking, result) => {
+          setIsStreaming(false);
+          setResult(result as Result);
+        },
+      });
+    } catch {
+      addToast({
+        title: '请求失败',
+        description: '请求异常，请重试！',
+        color: 'danger',
+      });
+    }
   };
 
   const onReset = () => {

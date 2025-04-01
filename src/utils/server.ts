@@ -116,7 +116,13 @@ export async function RecordUsage({
   });
 }
 
-// 获取大模型响应流
+/**
+ * 获取大模型响应流
+ * @param completion 大模型响应流 await service.chat.completions.create 返回的流式数据 create({ stream: true })
+ * @param model 模型名称
+ * @param type 类型
+ * @returns 流式数据
+ */
 export const getStreamData = (completion: Stream<ChatCompletionChunk>, {
   model,
   type,
