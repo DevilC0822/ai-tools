@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardBody, Input, Button, Alert, addToast, Image as ImageUI } from '@heroui/react';
 import ModelChoose from '@/components/ModelChoose';
-import ReactMarkdown from 'react-markdown';
 import ToolTitle from '@/components/ToolTitle';
 import { isMobileDevice } from '@/utils/client';
 import Image from 'next/image';
@@ -21,10 +20,7 @@ defaultFormData.append('model', includeModels[0]);
 export default function CyberPhotoEditingPage() {
   const [formData, setFormData] = useState(defaultFormData);
   const [isLoading, setIsLoading] = useState(false); // 请求image.png
-  const [result, setResult] = useState({
-    img: '',
-    text: '',
-  });
+  const [result, setResult] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null); // 添加图片预览URL状态
 
   const onSelectImage = () => {
@@ -111,10 +107,7 @@ export default function CyberPhotoEditingPage() {
       });
       return;
     }
-    setResult({
-      img: '',
-      text: '',
-    });
+    setResult('');
     setIsLoading(true);
 
     const res = await fetch('/api/cyber-photo-editing', {
@@ -131,15 +124,12 @@ export default function CyberPhotoEditingPage() {
       });
       return;
     }
-    setResult({
-      img: res.data.img,
-      text: res.data.text,
-    });
+    setResult(res.data[0].b64_json);
   };
 
   const onDownload = () => {
     const link = document.createElement('a');
-    link.href = `data:image/png;base64,${result.img}`;
+    link.href = result;
     link.download = 'generator.png';
     link.click();
   };
@@ -151,10 +141,7 @@ export default function CyberPhotoEditingPage() {
       setImagePreview(null);
     }
     setFormData(defaultFormData);
-    setResult({
-      img: '',
-      text: '',
-    });
+    setResult('');
   };
 
   const [showExample, setShowExample] = useState(false);
@@ -257,7 +244,7 @@ export default function CyberPhotoEditingPage() {
       </Card>
 
       {
-        (result.img || result.text) && (
+        (result) && (
           <>
             <Alert variant='flat' color='primary' className='mt-2' title='生成的图片仅作为参考，请以实际效果为准。'>
             </Alert>
@@ -267,25 +254,16 @@ export default function CyberPhotoEditingPage() {
             }}>
               <CardBody>
                 {
-                  result.img && (
+                  result && (
                     <div className='w-full flex flex-col justify-center items-center overflow-hidden relative group'>
                       <Image
-                        src={`data:image/png;base64,${result.img}`}
+                        src={result}
                         className='my-2'
                         alt="生成的图片"
                         width={400}
                         height={400}
                       />
                       <Button color="primary" variant="light" onPress={onDownload}>下载</Button>
-                    </div>
-                  )
-                }
-                {
-                  result.text && (
-                    <div className="prose dark:prose-invert max-w-none prose-headings:mt-4 prose-headings:mb-2 prose-p:my-2 prose-li:my-0 prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg">
-                      <ReactMarkdown>
-                        {result.text}
-                      </ReactMarkdown>
                     </div>
                   )
                 }

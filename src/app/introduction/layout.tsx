@@ -27,7 +27,6 @@ const introductionMap: Record<string, { label: string; key: string; children: { 
 export default function IntroductionLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  console.log(pathname);
   
   const onGoIntroduction = (type: 'tool' | 'model', key: string) => {
     router.push(`/introduction/${type}/${key}`);

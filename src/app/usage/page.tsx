@@ -11,6 +11,7 @@ type Usage = {
     completion_tokens: number;
     prompt_tokens: number;
     total_tokens: number;
+    money?: string;
   };
   createTime: string;
 }
@@ -149,6 +150,7 @@ export default function UsagePage() {
               <TableColumn width={140} key="type">工具</TableColumn>
               <TableColumn width={200} key="model">模型</TableColumn>
               <TableColumn width={120} key="usage">使用量</TableColumn>
+              <TableColumn width={120} key="money">费用</TableColumn>
               <TableColumn width={180} key="createTime">创建时间</TableColumn>
             </TableHeader>
             <TableBody isLoading={loading} loadingContent={<Spinner color="primary" label="Loading..." />}>
@@ -173,6 +175,7 @@ export default function UsagePage() {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
                   })}</TableCell>
+                  <TableCell>{usage?.usage.money ?? ''}</TableCell>
                   <TableCell>{usage?.createTime ?? ''}</TableCell>
                 </TableRow>
               ))}

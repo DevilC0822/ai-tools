@@ -5,6 +5,7 @@ const UsageSchema = new mongoose.Schema({
     completion_tokens: Number,
     prompt_tokens: Number,
     total_tokens: Number,
+    money: String,
   },
   model: {
     type: String,

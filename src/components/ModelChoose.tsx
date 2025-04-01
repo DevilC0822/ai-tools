@@ -19,7 +19,7 @@ export default function ModelChoose(props: ModelChooseProps) {
   }, [model]);
   return (
     <div className='flex gap-2 flex-wrap w-full'>
-      {Object.keys(models).filter((key) => dataSources.includes(key)).map((key) => (
+      {Object.keys(models).filter((key) => dataSources.includes(key)).sort((a, b) => dataSources.indexOf(a) - dataSources.indexOf(b)).map((key) => (
         <Card
           key={key}
           classNames={{

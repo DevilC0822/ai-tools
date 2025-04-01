@@ -93,7 +93,6 @@ export async function Execution(fn: () => Promise<NextResponse>): Promise<NextRe
   try {
     return await fn();
   } catch (error) {
-    console.log(error);
     return ErrorResponse(error instanceof Error ? error.message : '服务器错误');
   }
 }
@@ -103,15 +102,34 @@ export async function RecordUsage({
   model,
   type,
   usage,
+  n, // 数量
 }: {
   model: string;
   type: string;
   usage: { completion_tokens: number, prompt_tokens: number, total_tokens: number };
+  n?: number;
 }) {
+  const modelInfo = models[model];
+  const price = modelInfo.price;
+  if (n) {
+    await Usage.create({
+      model,
+      type,
+      usage: {
+        ...usage,
+        money: `${(price.perImage! * n).toFixed(6)} ${price.unit}`,
+      },
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    });
+    return;
+  }
   await Usage.create({
     model,
     type,
-    usage,
+    usage: {
+      ...usage,
+      money: `${(price.perInToken! * usage.prompt_tokens + price.perOutToken! * usage.completion_tokens).toFixed(6)} ${price.unit}`,
+    },
     createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
   });
 }
