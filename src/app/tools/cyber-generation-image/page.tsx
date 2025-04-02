@@ -92,10 +92,11 @@ export default function CyberGenerationImagePage() {
                     <span>{formData.n}</span>
                   </div>
                   <Slider
+                    aria-label='图片数量'
                     color='primary'
                     value={formData.n}
                     minValue={1}
-                    maxValue={10}
+                    maxValue={4}
                     step={1}
                     showTooltip
                     onChange={(value) => setFormData({ ...formData, n: value as number })}

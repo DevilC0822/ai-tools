@@ -16,7 +16,6 @@ defaultFormData.append('image', ''); // File
 defaultFormData.append('prompt', '');
 defaultFormData.append('model', includeModels[0]);
 
-
 export default function CyberPhotoEditingPage() {
   const [formData, setFormData] = useState(defaultFormData);
   const [isLoading, setIsLoading] = useState(false); // 请求image.png
@@ -98,15 +97,15 @@ export default function CyberPhotoEditingPage() {
       });
       return;
     }
-    const balance = await fetch('/api/balance?model=gemini-2.0-flash-exp-image-generation').then(res => res.json());
-    if (balance.data <= 0) {
-      addToast({
-        title: '今日使用次数已达上限',
-        description: 'gemini-2.0-flash-exp-image-generation 模型限制每日 25 次，今天的使用次数已经用完，请明天再来吧。',
-        color: 'danger',
-      });
-      return;
-    }
+    // const balance = await fetch('/api/balance?model=gemini-2.0-flash-exp-image-generation').then(res => res.json());
+    // if (balance.data <= 0) {
+    //   addToast({
+    //     title: '今日使用次数已达上限',
+    //     description: 'gemini-2.0-flash-exp-image-generation 模型限制每日 25 次，今天的使用次数已经用完，请明天再来吧。',
+    //     color: 'danger',
+    //   });
+    //   return;
+    // }
     setResult('');
     setIsLoading(true);
 

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardBody, Input, NumberInput, Button, Alert, addToast, Spinner } from '@heroui/react';
+import { Card, CardHeader, CardBody, Input, Slider, Button, Alert, addToast, Spinner } from '@heroui/react';
 import ModelChoose from '@/components/ModelChoose';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
@@ -117,7 +117,7 @@ export default function CyberFortuneTellingPage() {
       setScreenWidth(window.innerWidth);
     });
     return () => {
-      window.removeEventListener('resize', () => {});
+      window.removeEventListener('resize', () => { });
     };
   }, []);
   return (
@@ -137,20 +137,19 @@ export default function CyberFortuneTellingPage() {
               />
             </div>
             <div className="flex flex-col gap-2 items-start w-[400px] max-md:w-full">
-              <span className='flex-shrink-0 text-right'>大事记数量</span>
-              <NumberInput
-                placeholder="输入你想了解的大事记个数"
-                aria-label="大事记个数"
-                type="number"
+              <div className='w-full pr-2 flex-shrink-0 flex justify-between'>
+                <span>大事记数量</span>
+                <span>{formData.count}</span>
+              </div>
+              <Slider
+                aria-label='大事记数量'
+                color='primary'
                 value={formData.count}
-                onValueChange={(e) => {
-                  if (Number.isNaN(e)) {
-                    return;
-                  }
-                  setFormData({ ...formData, count: e });
-                }}
                 minValue={2}
                 maxValue={20}
+                step={1}
+                showTooltip
+                onChange={(value) => setFormData({ ...formData, count: value as number })}
               />
             </div>
             <div className="flex flex-col gap-2 items-start w-full">

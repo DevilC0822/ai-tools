@@ -6,6 +6,16 @@ import Usage from '@/db/UsageSchema';
 import { Stream } from 'openai/streaming';
 import { ChatCompletionChunk } from 'openai/resources';
 import dayjs from 'dayjs';
+import { ContentListUnion } from '@google/genai';
+
+const failMap: Record<string, string> = {
+  'IMAGE_SAFETY': '候选图片因生成不安全的内容而被屏蔽。',
+  'PROHIBITED_CONTENT': '系统屏蔽了此提示，因为其中包含禁止的内容。',
+  'BLOCKLIST': '系统屏蔽了此提示，因为其中包含术语屏蔽名单中包含的术语。',
+  'OTHER': '提示因未知原因被屏蔽了。',
+  'SAFETY': '系统屏蔽了此提示，因为其中包含禁止的内容。',
+  'BLOCK_REASON_UNSPECIFIED': '未指定原因。',
+};
 
 type Delta = {
   reasoning_content?: string;
@@ -165,7 +175,7 @@ export const getStreamData = (completion: Stream<ChatCompletionChunk>, {
           const { choices } = chunk;
           const delta = choices[0]?.delta as Delta ?? {};
           console.log(delta);
-          
+
           if (!delta) continue;
 
           const { reasoning_content = null, content = null } = delta;
@@ -204,4 +214,128 @@ export const getStreamData = (completion: Stream<ChatCompletionChunk>, {
     },
   });
   return stream;
+};
+
+
+type ImageGenerateResult = {
+  text: string;
+  revised_prompt: string;
+  url: string;
+  b64_json: string;
+}
+
+/**
+ * 使用 Google GenAI 生成图片
+ * @param model 模型名称
+ * @param type 类型 工具类型，用于记录使用情况
+ * @param contents 内容 包含图片的 base64 编码以及 prompt
+ * @returns 图片结果 如果返回的的是字符串，则表示生成失败
+ */
+export const imageGenerateForGoogleGenAI = async ({
+  model,
+  type,
+  contents,
+}: {
+  model: string;
+  type: string;
+  contents: ContentListUnion;
+}): Promise<ImageGenerateResult[] | string> => {
+  const response = await geminiServiceForGoogleGenAI.models.generateContent({
+    model,
+    contents,
+    config: {
+      responseModalities: ['Text', 'Image'],
+    },
+  });
+
+  if (!response.candidates) {
+    return 'Gemini返回结果为空,请重试';
+  }
+  await RecordUsage({
+    model,
+    usage: {
+      completion_tokens: 0,
+      prompt_tokens: response.usageMetadata?.promptTokenCount ?? 0,
+      total_tokens: response.usageMetadata?.promptTokenCount ?? 0,
+    },
+    type,
+  });
+  if (!response.candidates[0]?.content?.parts) {
+    const reason = failMap[response.candidates![0]?.finishReason ?? 'BLOCK_REASON_UNSPECIFIED'];
+    return reason;
+  }
+  const result = {
+    text: '',
+    img: '',
+  };
+  for (const part of response.candidates[0].content.parts) {
+    // Based on the part type, either show the text or save the image
+    if (part?.text) {
+      result.text = part.text;
+    } else if (part?.inlineData) {
+      const imageData = part.inlineData.data!;
+      const buffer = Buffer.from(imageData, 'base64');
+      result.img = buffer.toString('base64');
+    }
+  }
+  if (!result.img) {
+    return 'No image from Gemini';
+  }
+  return [{
+    text: result.text,
+    revised_prompt: '',
+    url: '',
+    b64_json: `data:image/png;base64,${result.img}`,
+  }];
+};
+
+/**
+ * 使用 OpenAI 生成图片
+ * @param model 模型名称
+ * @param type 类型 工具类型，用于记录使用情况
+ * @param prompt 提示词
+ * @param n 数量
+ * @param rest 其他参数 参考 OpenAI API 文档
+ * @returns 图片结果 如果返回的的是字符串，则表示生成失败
+ */
+export const imageGenerateForOpenAI = async ({
+  model,
+  type,
+  prompt,
+  n = 1,
+  ...rest
+}: {
+  model: string;
+  type: string;
+  prompt: string;
+  n?: number;
+  [key: string]: unknown;
+}): Promise<ImageGenerateResult[] | string> => {
+  const service = getService(model);
+  const response = await service.images.generate({
+    model,
+    prompt,
+    n,
+    response_format: 'b64_json',
+    ...rest,
+  });
+  await RecordUsage({
+    model,
+    usage: {
+      completion_tokens: 0,
+      prompt_tokens: 0,
+      total_tokens: 0,
+    },
+    n,
+    type,
+  });
+  if (!response.data) {
+    return 'OpenAI返回结果为空,请重试';
+  }
+  return response.data.map(i => ({
+    text: '',
+    revised_prompt: '',
+    url: '',
+    b64_json: `data:image/jpg;base64,${i.b64_json}`,
+  }));
 };
