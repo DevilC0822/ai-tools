@@ -1,19 +1,22 @@
-import { Execution, getService } from '@/utils/server';
+import { Execution, getService, ErrorResponse } from '@/utils/server';
 import { NextResponse, NextRequest } from 'next/server';
-import { getStreamData } from '@/utils/server';
+import { getStreamData, checkModelLimit } from '@/utils/server';
 
 export async function POST(request: NextRequest) {
   return Execution(async () => {
     const params = await request.json();
-    const count = params.count || 1;
-    const name = params.name;
-    const service = getService(params.model);
+    const { model, count = 1, name } = params;
+    const check = await checkModelLimit(model);
+    if (!check.success) {
+      return ErrorResponse(check.message);
+    }
+    const service = getService(model);
     const completion = await service.chat.completions.create({
-      model: params.model,
+      model,
       messages: [
         {
           role: 'system',
-            content: `
+          content: `
             Please summarize ${count} notable events in ${name}'s life.
             string type fields should be in Chinese.
             {
@@ -30,7 +33,7 @@ export async function POST(request: NextRequest) {
               ]
             }
             `,
-          },
+        },
         {
           role: 'user',
           content: `

@@ -42,46 +42,50 @@ export const parseReadableStream = async (stream: ReadableStream<Uint8Array<Arra
   onThinkingStart?: () => void;
   onThinkingEnd?: () => void;
 }) => {
-  const { output = 'text', onStart = () => {}, onEnd = () => {}, onThinkingStart = () => {}, onThinkingEnd = () => {}, onchange = () => {} } = options;
-  const reader = stream?.getReader();
-  const decoder = new TextDecoder();
-  let isReasoning = false;
-  let thinking = '';
-  let content = '';
-  onStart();
-  while (true) {
-    const { done, value } = await reader!.read();
-    if (done) break;
-    const text = decoder.decode(value);
-    if (text.includes('<thinking>')) {
-      isReasoning = true;
-      onThinkingStart();
-      continue;
-    }
-    if (text.includes('</thinking>')) {
-      isReasoning = false;
-      onThinkingEnd();
-      continue;
-    }
-    if (text.includes('[DONE]')) {
-      let result = content;
-      if (output === 'json') {
-        // 取出 ```json 和 ``` 之间的内容
-        const jsonContent = result.match(/```json\s*([\s\S]*?)\s*```/)?.[1] || '';
-        try {
-          result = JSON.parse(jsonContent);
-        } catch (error) {
-          console.error(error);
-        }
+  try {
+    const { output = 'text', onStart = () => { }, onEnd = () => { }, onThinkingStart = () => { }, onThinkingEnd = () => { }, onchange = () => { } } = options;
+    const reader = stream?.getReader();
+    const decoder = new TextDecoder();
+    let isReasoning = false;
+    let thinking = '';
+    let content = '';
+    onStart();
+    while (true) {
+      const { done, value } = await reader!.read();
+      if (done) break;
+      const text = decoder.decode(value);
+      if (text.includes('<thinking>')) {
+        isReasoning = true;
+        onThinkingStart();
+        continue;
       }
-      onEnd(thinking, result);
-      break;
+      if (text.includes('</thinking>')) {
+        isReasoning = false;
+        onThinkingEnd();
+        continue;
+      }
+      if (text.includes('[DONE]')) {
+        let result = content;
+        if (output === 'json') {
+          // 取出 ```json 和 ``` 之间的内容
+          const jsonContent = result.match(/```json\s*([\s\S]*?)\s*```/)?.[1] || '';
+          try {
+            result = JSON.parse(jsonContent);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        onEnd(thinking, result);
+        break;
+      }
+      if (isReasoning) {
+        thinking += text;
+      } else {
+        content += text;
+      }
+      onchange(thinking, content);
     }
-    if (isReasoning) {
-      thinking += text;
-    } else {
-      content += text;
-    }
-    onchange(thinking, content);
+  } catch (error) {
+    console.error(error);
   }
 };

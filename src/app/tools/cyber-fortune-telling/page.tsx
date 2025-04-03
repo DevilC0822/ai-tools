@@ -62,15 +62,20 @@ export default function CyberFortuneTellingPage() {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then(res => res.body).finally(() => {
+    }).then(async res => {
+      if (res.headers.get('Content-Type') === 'application/json') {
+        addToast({
+          title: '请求失败',
+          description: (await res.json()).message,
+          color: 'danger',
+        });
+        return;
+      }
+      return res.body;
+    }).finally(() => {
       setIsLoading(false);
     });
     if (!stream) {
-      addToast({
-        title: '请求失败',
-        description: '请求失败',
-        color: 'danger',
-      });
       return;
     }
     parseReadableStream(stream, {

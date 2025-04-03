@@ -52,6 +52,10 @@ export default async function MainIntroductionPage(props: IntroductionPageProps)
           <span className='font-bold'>服务提供方：</span>
           {model.apiService}
         </p>
+        <p>
+          <span className='font-bold'>使用限制：</span>
+          {model.useLimit.description}
+        </p>
       </div>
     );
   }

@@ -36,6 +36,12 @@ export type Model = {
       perImage?: number; // 每个图片的价格
       unit: string; // 价格单位
     };
+    useLimit: {
+      description: string; // 使用限制
+      type: 'frequency' | 'balance' | 'token'; // 使用限制类型
+      limit: number; // 使用限制数量
+      key: string; // 使用限制key
+    };
   }
 }
 
@@ -55,6 +61,12 @@ export const models: Model = {
       perOutToken: 0.4 / 1000000,
       unit: '$',
     },
+    useLimit: {
+      description: '所有Gemini 2.0 模型每天限制 1500 次',
+      type: 'frequency',
+      limit: 1500,
+      key: 'gemini-2.0',
+    },
   },
   'gemini-2.5-pro-exp-03-25': {
     service: 'gemini',
@@ -70,6 +82,12 @@ export const models: Model = {
       perInToken: 0.1 / 1000000,
       perOutToken: 0.4 / 1000000,
       unit: '$',
+    },
+    useLimit: {
+      description: 'Gemini 2.5 Pro Exp 03-25 每天限制 25 次',
+      type: 'frequency',
+      limit: 25,
+      key: 'gemini-2.5-pro',
     },
   },
   'gemini-2.0-flash-exp-image-generation': {
@@ -87,6 +105,12 @@ export const models: Model = {
       perOutToken: 0.4 / 1000000,
       unit: '$',
     },
+    useLimit: {
+      description: '所有Gemini 2.0 模型每天限制 1500 次',
+      type: 'frequency',
+      limit: 1500,
+      key: 'gemini-2.0',
+    },
   },
   'grok-2': {
     service: 'grok',
@@ -102,6 +126,12 @@ export const models: Model = {
       perInToken: 2 / 1000000,
       perOutToken: 10 / 1000000,
       unit: '$',
+    },
+    useLimit: {
+      description: '所有 grok 模型限制每月消费 100 美元',
+      type: 'balance',
+      limit: 100,
+      key: 'grok',
     },
   },
   'grok-2-vision': {
@@ -119,6 +149,12 @@ export const models: Model = {
       perOutToken: 10 / 1000000,
       unit: '$',
     },
+    useLimit: {
+      description: '所有 grok 模型限制每月消费 100 美元',
+      type: 'balance',
+      limit: 100,
+      key: 'grok',
+    },
   },
   'grok-2-image': {
     service: 'grok',
@@ -133,6 +169,12 @@ export const models: Model = {
     price: {
       perImage: 0.07,
       unit: '$',
+    },
+    useLimit: {
+      description: '所有 grok 模型限制每月消费 100 美元',
+      type: 'balance',
+      limit: 100,
+      key: 'grok',
     },
   },
   'doubao-1-5-vision-pro-32k-250115': {
@@ -150,6 +192,12 @@ export const models: Model = {
       perOutToken: 9 / 1000000,
       unit: '¥',
     },
+    useLimit: {
+      description: '每天 50万 Token 使用量',
+      type: 'token',
+      limit: 500000,
+      key: 'doubao',
+    },
   },
   'deepseek-chat': {
     service: 'deepseek',
@@ -166,6 +214,12 @@ export const models: Model = {
       perOutToken: 8 / 1000000,
       unit: '¥',
     },
+    useLimit: {
+      description: '按照余额限制',
+      type: 'balance',
+      limit: 100,
+      key: 'deepseek',
+    },
   },
   'deepseek-reasoner': {
     service: 'deepseek',
@@ -181,6 +235,12 @@ export const models: Model = {
       perInToken: 4 / 1000000,
       perOutToken: 16 / 1000000,
       unit: '¥',
+    },
+    useLimit: {
+      description: '按照余额限制',
+      type: 'balance',
+      limit: 100,
+      key: 'deepseek',
     },
   },
 };

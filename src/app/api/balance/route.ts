@@ -11,10 +11,10 @@ export async function GET(request: NextRequest) {
     if (model) {
       switch (model) {
         case 'gemini-2.0-flash-exp-image-generation':
-          const LIMIT = 25;
+          const LIMIT = 1000;
           const today = dayjs().format('YYYY-MM-DD');
           const usage = await Usage.countDocuments({
-            model: 'gemini-2.0-flash-exp-image-generation',
+            model: { $regex: '^gemini-2.0' },
             createTime: { $gte: today },
           });
           return SuccessResponse(LIMIT - usage, {

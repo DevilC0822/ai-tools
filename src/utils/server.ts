@@ -339,3 +339,51 @@ export const imageGenerateForOpenAI = async ({
     b64_json: `data:image/jpg;base64,${i.b64_json}`,
   }));
 };
+
+
+export const checkModelLimit = async (model: string): Promise<{ success: boolean, message: string }> => {
+  const modelInfo = models[model];
+  if (!modelInfo) {
+    return { success: false, message: 'model not found' };
+  }
+  const { type, limit, key } = modelInfo.useLimit;
+  // 判断当天请求次数
+  if (type === 'frequency') {
+    const usage = await Usage.countDocuments({
+      model: { $regex: `^${key}` },
+      createTime: { $gte: dayjs().format('YYYY-MM-DD') },
+    });
+    console.log(usage);
+    if (usage >= limit) {
+      return { success: false, message: '请求次数超过限制' };
+    }
+  }
+  // 判断余额: deepseek 通过余额判断，grok 通过 Usage 中当月消费判断
+  if (type === 'balance') {
+    if (key === 'deepseek') {
+      const balance = await fetch('https://api.deepseek.com/user/balance', {
+        headers: {
+          'Authorization': `Bearer ${process.env.DEEPSEEK_KEY}`,
+        },
+      });
+      const balanceData = await balance.json();
+      if (!balanceData.is_available) {
+        return { success: false, message: '账户不可用' };
+      }
+      if (balanceData.balance_infos[0].total_balance <= 0) {
+        return { success: false, message: '余额不足' };
+      }
+    }
+    if (key === 'grok') {
+      const usage = await Usage.find({
+        model: { $regex: `^${key}` },
+        createTime: { $gte: dayjs().startOf('month').format('YYYY-MM-DD'), $lte: dayjs().endOf('month').format('YYYY-MM-DD') },
+      });
+      const totalUsage = usage.reduce((acc, curr) => acc + Number(curr.usage?.money.trim().slice(0, -1) ?? 0), 0);
+      if (totalUsage >= limit) {
+        return { success: false, message: 'Grok 模型已经达到本月限制，请更换其他模型' };
+      }
+    }
+  }
+  return { success: true, message: 'success' };
+};

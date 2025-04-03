@@ -1,4 +1,4 @@
-import { Execution, getService } from '@/utils/server';
+import { Execution, getService, ErrorResponse, checkModelLimit } from '@/utils/server';
 import { NextResponse, NextRequest } from 'next/server';
 import { getStreamData } from '@/utils/server';
 
@@ -25,9 +25,14 @@ const getPrompt = (options: { gender: string, birthday: string, birthplace: stri
 export async function POST(request: NextRequest) {
   return Execution(async () => {
     const params = await request.json();
-    const service = getService(params.model);
+    const { model } = params;
+    const check = await checkModelLimit(model);
+    if (!check.success) {
+      return ErrorResponse(check.message);
+    }
+    const service = getService(model);
     const completion = await service.chat.completions.create({
-      model: params.model,
+      model,
       messages: [
         {
           role: 'system',
@@ -46,7 +51,7 @@ export async function POST(request: NextRequest) {
       },
     });
     const stream = getStreamData(completion, {
-      model: params.model,
+      model,
       type: '0',
     });
     return new NextResponse(stream, {

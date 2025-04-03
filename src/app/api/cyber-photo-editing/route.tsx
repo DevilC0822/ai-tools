@@ -1,4 +1,4 @@
-import { Execution, SuccessResponse, ErrorResponse, imageGenerateForGoogleGenAI } from '@/utils/server';
+import { Execution, SuccessResponse, ErrorResponse, imageGenerateForGoogleGenAI, checkModelLimit } from '@/utils/server';
 import { NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -6,6 +6,10 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const prompt = formData.get('prompt') as string;
     const model = formData.get('model') as string;
+    const check = await checkModelLimit(model);
+    if (!check.success) {
+      return ErrorResponse(check.message);
+    }
     const file = formData.get('image') as File;
     const buffer = await file.arrayBuffer();
     const base64_image = Buffer.from(buffer).toString('base64');
