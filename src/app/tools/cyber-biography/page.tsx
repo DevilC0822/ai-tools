@@ -8,8 +8,9 @@ import ToolTitle from '@/components/ToolTitle';
 import { parseReadableStream } from '@/utils/client';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
+import { TModelList } from '@/config/models';
 
-const includeModels = ['gemini-2.0-flash', 'gemini-2.5-pro-exp-03-25', 'grok-2', 'deepseek-chat', 'deepseek-reasoner'];
+const includeModels: TModelList[] = ['gemini-2.0-flash', 'gemini-2.5-pro-exp-03-25', 'grok-2', 'deepseek-chat', 'deepseek-reasoner'];
 
 const defaultFormData = {
   name: '',

@@ -8,8 +8,9 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import ExampleOriginal from '@/assets/images/edit-photo-example-original.png';
 import ExampleResult from '@/assets/images/edit-photo-example-result.png';
+import { TModelList } from '@/config/models';
 
-const includeModels = ['gemini-2.0-flash-exp-image-generation'];
+const includeModels: TModelList[] = ['gemini-2.0-flash-exp-image-generation'];
 
 const defaultFormData = new FormData();
 defaultFormData.append('image', ''); // File
@@ -222,7 +223,7 @@ export default function CyberPhotoEditingPage() {
               <span className='flex-shrink-0 text-right'>模型</span>
               <ModelChoose
                 dataSources={includeModels}
-                model={formData.get('model') as string}
+                model={formData.get('model') as TModelList}
                 onChange={(model) => {
                   const newFormData = new FormData();
                   if (formData.get('image')) {

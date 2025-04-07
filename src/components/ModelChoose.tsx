@@ -1,12 +1,12 @@
-import { models } from '@/config/models';
+import { models, type TModelList } from '@/config/models';
 import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody, cn } from '@heroui/react';
 import MyTooltip from './MyTooltip';
 
 type ModelChooseProps = {
-  model: string;
-  dataSources: string[];
-  onChange: (model: string) => void;
+  model: TModelList;
+  dataSources: TModelList[];
+  onChange: (model: TModelList) => void;
 };
 
 export default function ModelChoose(props: ModelChooseProps) {
@@ -19,7 +19,7 @@ export default function ModelChoose(props: ModelChooseProps) {
   }, [model]);
   return (
     <div className='flex gap-2 flex-wrap w-full'>
-      {Object.keys(models).filter((key) => dataSources.includes(key)).sort((a, b) => dataSources.indexOf(a) - dataSources.indexOf(b)).map((key) => (
+      {(Object.keys(models) as TModelList[]).filter((key) => dataSources.includes(key)).sort((a, b) => dataSources.indexOf(a) - dataSources.indexOf(b)).map((key) => (
         <Card
           key={key}
           classNames={{

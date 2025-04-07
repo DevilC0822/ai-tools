@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { Card, CardHeader, CardBody, Input, Button, Alert, addToast, Image, Slider } from '@heroui/react';
 import ModelChoose from '@/components/ModelChoose';
 import ToolTitle from '@/components/ToolTitle';
+import { TModelList } from '@/config/models';
 
-const includeModels = ['grok-2-image', 'gemini-2.0-flash-exp-image-generation'];
+const includeModels: TModelList[] = ['grok-2-image', 'gemini-2.0-flash-exp-image-generation'];
 
 const defaultFormData = {
   prompt: '',
