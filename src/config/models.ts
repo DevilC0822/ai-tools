@@ -18,37 +18,44 @@ export const modelAbilities = {
 };
 
 export type Model = {
-  [key: string]: {
-    disabled?: boolean; // 是否可用
-    disabledReason?: string; // 不可用原因
-    developer: string; // 开发团队
-    service: string; // 服务提供方
-    apiService: string; // API服务提供方
-    label: string; // 模型名称
-    briefLabel: string; // 模型简称
-    icon: string; // 模型图标
-    website: string; // 模型官网
-    description: string; // 模型描述
-    abilities: (keyof typeof modelAbilities)[]; // 模型能力
-    price: {
-      perInToken?: number; // 每个输入token的价格
-      perOutToken?: number; // 每个输出token的价格
-      perImage?: number; // 每个图片的价格
-      unit: string; // 价格单位
-    };
-    useLimit: {
-      description: string; // 使用限制
-      type: 'frequency' | 'balance' | 'token'; // 使用限制类型
-      limit: number; // 使用限制数量
-      key: string; // 使用限制key
-    };
-  }
+  disabled?: boolean; // 是否可用
+  disabledReason?: string; // 不可用原因
+  developer: string; // 开发团队
+  service: string; // 服务提供方
+  apiService: string; // API服务提供方
+  label: string; // 模型名称
+  briefLabel: string; // 模型简称
+  icon: string; // 模型图标
+  website: string; // 模型官网
+  description: string; // 模型描述
+  abilities: (keyof typeof modelAbilities)[]; // 模型能力
+  price: {
+    perInToken?: number; // 每个输入token的价格
+    perOutToken?: number; // 每个输出token的价格
+    perImage?: number; // 每个图片的价格
+    unit: string; // 价格单位
+  };
+  useLimit: {
+    description: string; // 使用限制
+    type: 'frequency' | 'balance' | 'token'; // 使用限制类型
+    limit: number; // 使用限制数量
+    key: string; // 使用限制key
+  };
 }
 
-export const models: Model = {
+export const grokUseLimit = {
+  description: '所有 grok 模型限制每月消费 100 美元',
+  type: 'balance' as const,
+  limit: 100,
+  key: 'grok' as const,
+};
+
+export type TModelList = 'gemini-2.0-flash' | 'gemini-2.5-pro-exp-03-25' | 'gemini-2.0-flash-exp-image-generation' | 'grok-2' | 'grok-2-vision' | 'grok-2-image' | 'doubao-1-5-vision-pro-32k-250115' | 'deepseek-chat' | 'deepseek-reasoner';
+
+export const models: Record<TModelList, Model> = {
   'gemini-2.0-flash': {
     service: 'gemini',
-    apiService: '谷歌',
+    apiService: '谷歌', 
     developer: '谷歌',
     label: 'Gemini 2.0 Flash',
     briefLabel: 'Gemini 2.0 Flash',
@@ -62,10 +69,10 @@ export const models: Model = {
       unit: '$',
     },
     useLimit: {
-      description: '所有Gemini 2.0 模型每天限制 1500 次',
+      description: 'Gemini 2.0 Flash 模型每天限制 1000 次',
       type: 'frequency',
-      limit: 1500,
-      key: 'gemini-2.0',
+      limit: 1000,
+      key: 'gemini-2.0-flash',
     },
   },
   'gemini-2.5-pro-exp-03-25': {
@@ -84,10 +91,10 @@ export const models: Model = {
       unit: '$',
     },
     useLimit: {
-      description: 'Gemini 2.5 Pro Exp 03-25 每天限制 25 次',
+      description: 'Gemini 2.5 Pro Exp 03-25 每天限制 15 次',
       type: 'frequency',
-      limit: 25,
-      key: 'gemini-2.5-pro',
+      limit: 15,
+      key: 'gemini-2.5-pro-exp',
     },
   },
   'gemini-2.0-flash-exp-image-generation': {
@@ -106,10 +113,10 @@ export const models: Model = {
       unit: '$',
     },
     useLimit: {
-      description: '所有Gemini 2.0 模型每天限制 1500 次',
+      description: 'Gemini 2.0 Flash Experimental 模型每天限制 1000 次',
       type: 'frequency',
-      limit: 1500,
-      key: 'gemini-2.0',
+      limit: 1000,
+      key: 'gemini-2.0-flash-exp',
     },
   },
   'grok-2': {
@@ -127,12 +134,7 @@ export const models: Model = {
       perOutToken: 10 / 1000000,
       unit: '$',
     },
-    useLimit: {
-      description: '所有 grok 模型限制每月消费 100 美元',
-      type: 'balance',
-      limit: 100,
-      key: 'grok',
-    },
+    useLimit: grokUseLimit,
   },
   'grok-2-vision': {
     service: 'grok',
@@ -149,12 +151,7 @@ export const models: Model = {
       perOutToken: 10 / 1000000,
       unit: '$',
     },
-    useLimit: {
-      description: '所有 grok 模型限制每月消费 100 美元',
-      type: 'balance',
-      limit: 100,
-      key: 'grok',
-    },
+    useLimit: grokUseLimit,
   },
   'grok-2-image': {
     service: 'grok',
@@ -170,12 +167,7 @@ export const models: Model = {
       perImage: 0.07,
       unit: '$',
     },
-    useLimit: {
-      description: '所有 grok 模型限制每月消费 100 美元',
-      type: 'balance',
-      limit: 100,
-      key: 'grok',
-    },
+    useLimit: grokUseLimit,
   },
   'doubao-1-5-vision-pro-32k-250115': {
     service: 'volcengine',

@@ -2,6 +2,7 @@ import CyberFortuneTelling from '@/components/tools-introduction/cyber-fortune-t
 import CyberPhotoEditing from '@/components/tools-introduction/cyber-photo-editing';
 import CyberBiography from '@/components/tools-introduction/cyber-biography';
 import CyberGenerationImage from '@/components/tools-introduction/cyber-generation-image';
+import CyberDreamInterpretation from '@/components/tools-introduction/cyber-dream-interpretation';
 
 export type Tool = {
   [key: string]: {
@@ -46,5 +47,14 @@ export const tools: Tool = {
     description: <CyberGenerationImage />,
     miniDescription: '输入文字，即刻生成高清图像。Artificium Canvas提供30+艺术风格、10秒极速出图。设计师、营销人、内容创作者的AI画布，让想象力突破工具限制。',
     btnText: '开始生成',
+  },
+  // 赛博解梦
+  'cyber-dream-interpretation': {
+    label: '🛌 赛博解梦',
+    type: '4',
+    title: '「赛博解梦」 —— 用AI解码你的梦境密码',
+    description: <CyberDreamInterpretation />,
+    miniDescription: '输入梦境片段，AI解析深层隐喻。结合荣格原型理论与20万+文化符号数据库，提供心理映射、文化溯源、创意激发三重解读，让每个梦境都成为认识自我的钥匙。',
+    btnText: '开始解梦',
   },
 };

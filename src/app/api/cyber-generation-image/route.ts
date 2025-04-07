@@ -1,4 +1,4 @@
-import { Execution, imageGenerateForGoogleGenAI, imageGenerateForOpenAI, checkModelLimit } from '@/utils/server';
+import { Execution, imageGenerateForGoogleGenAI, imageGenerateForOpenAI, checkModelBalance } from '@/utils/server';
 import { NextRequest } from 'next/server';
 import { SuccessResponse, ErrorResponse } from '@/utils/server';
 
@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   return Execution(async () => {
     const params = await request.json();
     const { model, prompt, ...rest } = params;
-    const check = await checkModelLimit(model);
+    const check = await checkModelBalance(model);
     if (!check.success) {
       return ErrorResponse(check.message);
     }

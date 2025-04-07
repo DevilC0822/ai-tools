@@ -1,12 +1,13 @@
-import { Execution, SuccessResponse, ErrorResponse, imageGenerateForGoogleGenAI, checkModelLimit } from '@/utils/server';
+import { Execution, SuccessResponse, ErrorResponse, imageGenerateForGoogleGenAI, checkModelBalance } from '@/utils/server';
 import { NextRequest } from 'next/server';
+import { type TModelList } from '@/config/models';
 
 export async function POST(request: NextRequest) {
   return Execution(async () => {
     const formData = await request.formData();
     const prompt = formData.get('prompt') as string;
-    const model = formData.get('model') as string;
-    const check = await checkModelLimit(model);
+    const model = formData.get('model') as TModelList;
+    const check = await checkModelBalance(model);
     if (!check.success) {
       return ErrorResponse(check.message);
     }

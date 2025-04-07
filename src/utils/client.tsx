@@ -1,11 +1,11 @@
-import { models } from '@/config/models';
+import { models, type TModelList } from '@/config/models';
 import { tools } from '@/config/tools';
 
 export const getOptions = (type: string) => {
   switch (type) {
     case 'model':
       return Object.keys(models).map((model) => ({
-        label: models[model].label,
+        label: models[model as TModelList].label,
         value: model,
       }));
     case 'tool':

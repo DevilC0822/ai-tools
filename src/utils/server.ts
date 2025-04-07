@@ -1,12 +1,14 @@
 import OpenAI from 'openai';
 import { GoogleGenAI } from '@google/genai';
 import { NextResponse } from 'next/server';
-import { models } from '@/config/models';
+import { models, type TModelList } from '@/config/models';
 import Usage from '@/db/UsageSchema';
 import { Stream } from 'openai/streaming';
 import { ChatCompletionChunk } from 'openai/resources';
 import dayjs from 'dayjs';
 import { ContentListUnion } from '@google/genai';
+import balanceAtom from '@/store/balance';
+import myStore from '@/store';
 
 const failMap: Record<string, string> = {
   'IMAGE_SAFETY': '候选图片因生成不安全的内容而被屏蔽。',
@@ -59,7 +61,7 @@ const ServiceMap: { [key: string]: OpenAI } = {
   deepseek: deepseekService,
 };
 
-export const getService = (model: string) => {
+export const getService = (model: TModelList) => {
   const service = models[model].service;
   if (!ServiceMap[service]) {
     throw new Error(`Service ${service} not found`);
@@ -114,7 +116,7 @@ export async function RecordUsage({
   usage,
   n, // 数量
 }: {
-  model: string;
+  model: TModelList;
   type: string;
   usage: { completion_tokens: number, prompt_tokens: number, total_tokens: number };
   n?: number;
@@ -155,7 +157,7 @@ export const getStreamData = (completion: Stream<ChatCompletionChunk>, {
   model,
   type,
 }: {
-  model: string;
+  model: TModelList;
   type: string;
 }) => {
   let count = 0;
@@ -236,7 +238,7 @@ export const imageGenerateForGoogleGenAI = async ({
   type,
   contents,
 }: {
-  model: string;
+  model: TModelList;
   type: string;
   contents: ContentListUnion;
 }): Promise<ImageGenerateResult[] | string> => {
@@ -305,7 +307,7 @@ export const imageGenerateForOpenAI = async ({
   n = 1,
   ...rest
 }: {
-  model: string;
+  model: TModelList;
   type: string;
   prompt: string;
   n?: number;
@@ -340,50 +342,13 @@ export const imageGenerateForOpenAI = async ({
   }));
 };
 
-
-export const checkModelLimit = async (model: string): Promise<{ success: boolean, message: string }> => {
-  const modelInfo = models[model];
-  if (!modelInfo) {
-    return { success: false, message: 'model not found' };
+export const checkModelBalance = async (model: TModelList): Promise<{ success: boolean, message: string }> => {
+  const balance = await myStore.get(balanceAtom);
+  if (!balance[model]) {
+    return { success: false, message: '模型未配置，请更换其他模型' };
   }
-  const { type, limit, key } = modelInfo.useLimit;
-  // 判断当天请求次数
-  if (type === 'frequency') {
-    const usage = await Usage.countDocuments({
-      model: { $regex: `^${key}` },
-      createTime: { $gte: dayjs().format('YYYY-MM-DD') },
-    });
-    console.log(usage);
-    if (usage >= limit) {
-      return { success: false, message: '请求次数超过限制' };
-    }
-  }
-  // 判断余额: deepseek 通过余额判断，grok 通过 Usage 中当月消费判断
-  if (type === 'balance') {
-    if (key === 'deepseek') {
-      const balance = await fetch('https://api.deepseek.com/user/balance', {
-        headers: {
-          'Authorization': `Bearer ${process.env.DEEPSEEK_KEY}`,
-        },
-      });
-      const balanceData = await balance.json();
-      if (!balanceData.is_available) {
-        return { success: false, message: '账户不可用' };
-      }
-      if (balanceData.balance_infos[0].total_balance <= 0) {
-        return { success: false, message: '余额不足' };
-      }
-    }
-    if (key === 'grok') {
-      const usage = await Usage.find({
-        model: { $regex: `^${key}` },
-        createTime: { $gte: dayjs().startOf('month').format('YYYY-MM-DD'), $lte: dayjs().endOf('month').format('YYYY-MM-DD') },
-      });
-      const totalUsage = usage.reduce((acc, curr) => acc + Number(curr.usage?.money.trim().slice(0, -1) ?? 0), 0);
-      if (totalUsage >= limit) {
-        return { success: false, message: 'Grok 模型已经达到本月限制，请更换其他模型' };
-      }
-    }
+  if (balance[model].balance <= 0) {
+    return { success: false, message: '余额不足' };
   }
   return { success: true, message: 'success' };
 };

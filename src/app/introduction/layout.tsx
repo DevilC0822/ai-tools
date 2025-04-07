@@ -1,6 +1,6 @@
 'use client';
 import { Card, CardBody, CardHeader, Accordion, AccordionItem, Button, cn } from '@heroui/react';
-import { models } from '@/config/models';
+import { models, type TModelList } from '@/config/models';
 import { tools } from '@/config/tools';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
@@ -18,7 +18,7 @@ const introductionMap: Record<string, { label: string; key: string; children: { 
     label: '模型',
     key: 'model',
     children: Object.keys(models).map((key) => ({
-      label: models[key].briefLabel,
+      label: models[key as TModelList].briefLabel,
       key,
     })),
   },

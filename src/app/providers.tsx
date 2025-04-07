@@ -1,6 +1,10 @@
+'use client';
+
 import { HeroUIProvider, ToastProvider } from '@heroui/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import Layout from '@/components/Layout';
+import { Provider as JotaiProvider } from 'jotai';
+import myStore from '@/store';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +15,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         },
       }} />
       <NextThemesProvider attribute="class" defaultTheme="light">
-        <Layout>{children}</Layout>
+        <JotaiProvider store={myStore}>
+          <Layout>{children}</Layout>
+        </JotaiProvider>
       </NextThemesProvider>
     </HeroUIProvider >
   );

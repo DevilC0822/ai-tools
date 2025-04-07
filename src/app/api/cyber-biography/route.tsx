@@ -1,12 +1,12 @@
 import { Execution, getService, ErrorResponse } from '@/utils/server';
 import { NextResponse, NextRequest } from 'next/server';
-import { getStreamData, checkModelLimit } from '@/utils/server';
+import { getStreamData, checkModelBalance } from '@/utils/server';
 
 export async function POST(request: NextRequest) {
   return Execution(async () => {
     const params = await request.json();
     const { model, count = 1, name } = params;
-    const check = await checkModelLimit(model);
+    const check = await checkModelBalance(model);
     if (!check.success) {
       return ErrorResponse(check.message);
     }
