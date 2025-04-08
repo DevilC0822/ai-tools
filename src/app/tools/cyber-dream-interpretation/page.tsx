@@ -109,7 +109,7 @@ export default function CyberFortuneTellingPage() {
               <ModelChoose dataSources={includeModels} model={formData.model} onChange={(model) => setFormData({ ...formData, model })} />
             </div>
             <div className="flex max-md:justify-center gap-2 mt-2">
-              <Button color='primary' onPress={onSubmit} isLoading={isLoading}>开始算命</Button>
+              <Button color='primary' onPress={onSubmit} isLoading={isLoading}>开始解梦</Button>
               <Button variant='light' onPress={onReset}>重置</Button>
             </div>
           </div>
