@@ -67,10 +67,12 @@ export const parseReadableStream = async (stream: ReadableStream<Uint8Array<Arra
       if (text.includes('[DONE]')) {
         let result = content;
         if (output === 'json') {
-          // 取出 ```json 和 ``` 之间的内容
-          const jsonContent = result.match(/```json\s*([\s\S]*?)\s*```/)?.[1] || '';
+          if (result.includes('```json')) {
+            // 取出 ```json 和 ``` 之间的内容
+            result = result.match(/```json\s*([\s\S]*?)\s*```/)?.[1] || '';
+          }
           try {
-            result = JSON.parse(jsonContent);
+            result = JSON.parse(result);
           } catch (error) {
             console.error(error);
           }

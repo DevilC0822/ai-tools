@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     });
     const stream = getStreamData(completion, {
       model,
-      type: '0',
+      type: '4',
     });
     return new NextResponse(stream, {
       headers: {

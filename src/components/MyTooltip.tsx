@@ -3,8 +3,8 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  cn,
 } from '@heroui/react';
-import { cn } from '@heroui/react';
 import { useRef, useEffect, useState } from 'react';
 
 interface TooltipProps {

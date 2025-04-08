@@ -1,6 +1,16 @@
 import { Execution, getService, ErrorResponse } from '@/utils/server';
 import { NextResponse, NextRequest } from 'next/server';
 import { getStreamData, checkModelBalance } from '@/utils/server';
+import { zodResponseFormat } from 'openai/helpers/zod';
+import { z } from 'zod';
+
+const BiographySchema = z.object({
+  name: z.string(),
+  gender: z.string(),
+  type: z.string(),
+  profile: z.string(),
+  timeline: z.array(z.object({ year: z.string(), title: z.string(), description: z.string() })),
+});
 
 export async function POST(request: NextRequest) {
   return Execution(async () => {
@@ -17,27 +27,22 @@ export async function POST(request: NextRequest) {
         {
           role: 'system',
           content: `
-            Please summarize ${count} notable events in ${name}'s life.
-            string type fields should be in Chinese.
-            {
-              "name": "string", // name
-              "gender": "string", // gender
-              "type": "string", // type
-              "profile": "string", // profile 100 words
-              "timeline": [
-                {
-                  "year": "string", // year
-                  "title": "string", // title
-                  "description": "string", // description 50 words
-                }
-              ]
-            }
+            you are a professional historian, you should be able to summarize the life of a person in a concise and accurate manner.
             `,
         },
         {
           role: 'user',
           content: `
-          请根据以上要求，给出${name}的大事记
+          Please summarize ${count} notable events in ${name}'s life.
+          string type fields should be in Chinese.
+          ${model.includes('deepseek') ? `Please return the result in JSON format.
+              name: z.string(),
+              gender: z.string(),
+              type: z.string(),
+              profile: z.string(),
+              timeline: z.array(z.object({ year: z.string(), title: z.string(), description: z.string() })),
+            ` : ''}
+
           `,
         },
       ],
@@ -45,6 +50,9 @@ export async function POST(request: NextRequest) {
       stream_options: {
         include_usage: true,
       },
+      response_format: model.includes('deepseek') ? {
+        type: model.includes('chat') ? 'json_object' : 'text',
+      } : zodResponseFormat(BiographySchema, 'biography'),
     });
     const stream = getStreamData(completion, {
       model: params.model,

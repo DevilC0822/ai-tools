@@ -153,7 +153,7 @@ export async function RecordUsage({
  * @param type 类型
  * @returns 流式数据
  */
-export const getStreamData = (completion: Stream<ChatCompletionChunk>, {
+export const getStreamData = (completion: unknown, {
   model,
   type,
 }: {
@@ -166,7 +166,7 @@ export const getStreamData = (completion: Stream<ChatCompletionChunk>, {
     async start(controller) {
       try {
         console.log('Starting stream processing...');
-        for await (const chunk of completion) {
+        for await (const chunk of completion as Stream<ChatCompletionChunk>) {
           if (chunk.choices[0].finish_reason === 'stop') {
             await RecordUsage({
               model,
