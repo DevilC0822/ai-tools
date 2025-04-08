@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import Providers from './providers';
 import './globals.css';
 import { connectToDatabase } from '@/db';
+import Script from 'next/script';
 
 await connectToDatabase();
 
@@ -28,6 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      {
+        process.env.NODE_ENV !== 'development' && (
+          <Script defer src="https://umami.mihouo.com/random-string.js" data-website-id="4be2c392-76ae-44b8-84f7-3c8d72cb6363" />
+        )
+      }
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
