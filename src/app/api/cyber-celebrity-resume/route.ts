@@ -3,22 +3,22 @@ import { NextResponse, NextRequest } from 'next/server';
 import { getStreamData, checkModelBalance } from '@/utils/server';
 
 const prompt = `
-请根据我提供的[历史人物资料]，生成一份以第一人称视角撰写的现代风格HTML简历。要求：
+请根据我提供的[人物资料]，生成一份以第一人称视角撰写的现代风格HTML简历。要求：
 
 1. **身份反差**：
-- 将历史人物的核心成就/身份转化为现代职业（如皇帝→CEO，将军→安保顾问，诗人→创意总监）
+- 将人物的核心成就/身份转化为现代职业（如皇帝→CEO，将军→安保顾问，诗人→创意总监）
 - 保留人物标志性特征但现代化（如拿破仑的三角帽→时尚单品收藏家）
 
 2. **简历结构**：
 <div class="resume">
   <header>
     <h1>[现代姓名]</h1>
-    <p class="tagline">[历史名言的现代翻译]</p>
+    <p class="tagline">[人物名言的现代翻译]</p>
   </header>
   
   <section class="about">
     <h2>关于我</h2>
-    <p>[用现代职场话术重新诠释历史经历，保持傲娇语气]</p>
+    <p>[用现代职场话术重新诠释人物经历，保持傲娇语气]</p>
   </section>
   
   <section class="experience">
@@ -27,7 +27,7 @@ const prompt = `
       <h3>[古代头衔→现代职位] @ [相关机构现代版]</h3>
       <p class="period">[在位年份→任职时间]</p>
       <ul>
-        <li>[著名战役→商业案例]</li>
+        <li>[著名事件→商业案例]</li>
         <li>[历史决策→管理创新]</li>
       </ul>
     </div>
@@ -86,7 +86,7 @@ const prompt = `
   </footer>
 </div>
 
-请根据实际提供的历史人物资料，在保持历史真实性的前提下进行创意改编，重点突出古今职业的反差萌感，**生成一个完成的html文件**。
+请根据实际提供的人物资料，在保持真实性的前提下进行创意改编，重点突出古今职业的反差萌感，**生成一个完成的html文件**。
 `;
 
 export async function POST(request: NextRequest) {
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       stream: true,
-      stream_options: model.includes('grok') ? undefined : {
+      stream_options: {
         include_usage: true,
       },
     });

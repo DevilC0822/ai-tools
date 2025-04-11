@@ -167,11 +167,12 @@ export const getStreamData = (completion: unknown, {
       try {
         console.log('Starting stream processing...');
         for await (const chunk of completion as Stream<ChatCompletionChunk>) {
-          if (chunk.choices[0].finish_reason === 'stop') {
+          // grok 模型返回 usage 是在结束后单独返回的，且 chunk.choices.length === 0
+          if ((chunk.choices.length === 0 && Object.hasOwn(chunk, 'usage')) || (chunk.choices[0]?.finish_reason === 'stop' && Object.hasOwn(chunk, 'usage'))) {
             await RecordUsage({
               model,
               type,
-              usage: chunk.usage as { completion_tokens: number, prompt_tokens: number, total_tokens: number },
+              usage: chunk?.usage ?? { completion_tokens: 0, prompt_tokens: 0, total_tokens: 0 },
             });
           }
           const { choices } = chunk;
