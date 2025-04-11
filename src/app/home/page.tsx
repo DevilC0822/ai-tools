@@ -90,7 +90,7 @@ export default function Home() {
                 }}
                 title={feature.title}
                 description={feature.description}
-                color="secondary"
+                color="primary"
                 hideIconWrapper
               />
             ))}

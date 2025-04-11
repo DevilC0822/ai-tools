@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       stream: true,
-      stream_options: {
+      stream_options: model.includes('grok') ? undefined : {
         include_usage: true,
       },
     });

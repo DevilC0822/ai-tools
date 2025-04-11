@@ -77,7 +77,7 @@ export default function UsagePage() {
               <Select
                 selectionMode="multiple"
                 className='w-[200px] max-md:w-full'
-                color="secondary"
+                color="primary"
                 aria-label="工具"
                 size="sm"
                 selectedKeys={filter.type}
@@ -89,7 +89,7 @@ export default function UsagePage() {
                 }}
               >
                 {toolOptions.map((option) => (
-                  <SelectItem color="secondary" key={option.value}>
+                  <SelectItem color="primary" key={option.value}>
                     {option.label}
                   </SelectItem>
                 ))}
@@ -100,7 +100,7 @@ export default function UsagePage() {
               <Select
                 selectionMode="multiple"
                 className='w-[200px] max-md:w-full'
-                color="secondary"
+                color="primary"
                 aria-label="模型"
                 size="sm"
                 selectedKeys={filter.model}
@@ -112,15 +112,15 @@ export default function UsagePage() {
                 }}
               >
                 {modelOptions.map((option) => (
-                  <SelectItem color="secondary" key={option.value}>
+                  <SelectItem color="primary" key={option.value}>
                     {option.label}
                   </SelectItem>
                 ))}
               </Select>
             </div>
             <div className='flex items-center gap-2 max-md:w-full'>
-              <Button color="secondary" size="sm" onPress={() => onSearch()}>查询</Button>
-              <Button color="secondary" size="sm" onPress={onReset}>重置</Button>
+              <Button color="primary" size="sm" onPress={() => onSearch()}>查询</Button>
+              <Button color="primary" size="sm" onPress={onReset}>重置</Button>
             </div>
           </div>
         </CardHeader>
@@ -136,7 +136,7 @@ export default function UsagePage() {
                   isCompact
                   showControls
                   showShadow
-                  color="secondary"
+                  color="primary"
                   page={pageInfo.current}
                   total={pageInfo.total}
                   boundaries={1}

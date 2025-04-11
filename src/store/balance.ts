@@ -59,6 +59,8 @@ const balanceAtom = atom<Promise<Record<string, Balance>>>(async (get) => {
   return {
     'deepseek-chat': deepseekBalance,
     'deepseek-reasoner': deepseekBalance,
+    'grok-3-mini': grokBalance,
+    'grok-3': grokBalance,
     'grok-2': grokBalance,
     'grok-2-vision': grokBalance,
     'grok-2-image': grokBalance,

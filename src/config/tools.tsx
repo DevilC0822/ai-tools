@@ -3,6 +3,7 @@ import CyberPhotoEditing from '@/components/tools-introduction/cyber-photo-editi
 import CyberBiography from '@/components/tools-introduction/cyber-biography';
 import CyberGenerationImage from '@/components/tools-introduction/cyber-generation-image';
 import CyberDreamInterpretation from '@/components/tools-introduction/cyber-dream-interpretation';
+import CyberCelebrityResume from '@/components/tools-introduction/cyber-celebrity-resume';
 
 export type Tool = {
   [key: string]: {
@@ -41,7 +42,7 @@ export const tools: Tool = {
     btnText: '开始生成',
   },
   'cyber-generation-image': {
-    label: '🖼️ 智能图像生成器',
+    label: '🖼️ 图像生成',
     type: '3',
     title: '「Artificium Canvas」 —— 智能图像生成器，让创意无限延展',
     description: <CyberGenerationImage />,
@@ -56,5 +57,13 @@ export const tools: Tool = {
     description: <CyberDreamInterpretation />,
     miniDescription: '输入梦境片段，AI解析深层隐喻。结合荣格原型理论与20万+文化符号数据库，提供心理映射、文化溯源、创意激发三重解读，让每个梦境都成为认识自我的钥匙。',
     btnText: '开始解梦',
+  },
+  'cyber-celebrity-resume': {
+    label: '👔 名人简历',
+    type: '5',
+    title: '「名人简历」 —— 用AI生成名人简历',
+    description: <CyberCelebrityResume />,
+    miniDescription: '输入名人姓名，即刻生成 TA 的简历；了解 TA 的生平、成就、经历，以及 TA 的职业生涯和人生轨迹。',
+    btnText: '开始生成',
   },
 };

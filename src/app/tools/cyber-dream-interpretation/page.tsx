@@ -8,7 +8,7 @@ import ToolTitle from '@/components/ToolTitle';
 import { parseReadableStream } from '@/utils/client';
 import { TModelList } from '@/config/models';
 
-const includeModels: TModelList[] = ['gemini-2.0-flash', 'gemini-2.5-pro-exp-03-25', 'grok-2', 'deepseek-chat', 'deepseek-reasoner'];
+const includeModels: TModelList[] = ['grok-3-mini', 'grok-3', 'gemini-2.0-flash', 'gemini-2.5-pro-exp-03-25', 'grok-2', 'deepseek-chat', 'deepseek-reasoner'];
 
 const defaultFormData = {
   mode: 'east',

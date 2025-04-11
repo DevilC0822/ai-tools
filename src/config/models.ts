@@ -50,7 +50,7 @@ export const grokUseLimit = {
   key: 'grok' as const,
 };
 
-export type TModelList = 'gemini-2.0-flash' | 'gemini-2.5-pro-exp-03-25' | 'gemini-2.0-flash-exp-image-generation' | 'grok-2' | 'grok-2-vision' | 'grok-2-image' | 'doubao-1-5-vision-pro-32k-250115' | 'deepseek-chat' | 'deepseek-reasoner';
+export type TModelList = 'gemini-2.0-flash' | 'gemini-2.5-pro-exp-03-25' | 'gemini-2.0-flash-exp-image-generation' | 'grok-3' | 'grok-3-mini' | 'grok-2' | 'grok-2-vision' | 'grok-2-image' | 'doubao-1-5-vision-pro-32k-250115' | 'deepseek-chat' | 'deepseek-reasoner';
 
 export const models: Record<TModelList, Model> = {
   'gemini-2.0-flash': {
@@ -119,6 +119,40 @@ export const models: Record<TModelList, Model> = {
       key: 'gemini-2.0-flash-exp',
     },
   },
+  'grok-3-mini': {
+    service: 'grok',
+    apiService: 'xAI',
+    developer: 'xAI',
+    label: 'Grok 3 Mini',
+    briefLabel: 'Grok 3 Mini',
+    icon: 'grok',
+    description: 'Grok 3 Mini 是一个轻量级的模型，它在回应前会进行思考。快速、智能，并且非常适合那些不需要深入领域知识的基于逻辑的任务。原始的思考痕迹是可访问的。',
+    website: 'https://grok.com/',
+    abilities: ['textInput', 'textOutput'],
+    price: {
+      perInToken: 0.3 / 1000000,
+      perOutToken: 0.5 / 1000000,
+      unit: '$',
+    },
+    useLimit: grokUseLimit,
+  },
+  'grok-3': {
+    service: 'grok',
+    apiService: 'xAI',
+    developer: 'xAI',
+    label: 'Grok 3',
+    briefLabel: 'Grok 3',
+    icon: 'grok',
+    description: 'Grok 3 的旗舰模型在企业应用场景中表现出色，例如数据提取、编码和文本总结。它在金融、医疗保健、法律和科学领域拥有深厚的专业知识。',
+    website: 'https://grok.com/',
+    abilities: ['textInput', 'textOutput'],
+    price: {
+      perInToken: 3 / 1000000,
+      perOutToken: 15 / 1000000,
+      unit: '$',
+    },
+    useLimit: grokUseLimit,
+  },
   'grok-2': {
     service: 'grok',
     apiService: 'xAI',
@@ -126,7 +160,7 @@ export const models: Record<TModelList, Model> = {
     label: 'Grok 2',
     briefLabel: 'Grok 2',
     icon: 'grok',
-    description: 'Grok 最新的文本模型支持结构化输出，效率、速度和性能均得到提升。',
+    description: 'Grok 文本模型支持结构化输出，效率、速度和性能均得到提升。',
     website: 'https://grok.com/',
     abilities: ['textInput', 'textOutput'],
     price: {

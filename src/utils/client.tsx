@@ -1,5 +1,8 @@
+'use client';
+
 import { models, type TModelList } from '@/config/models';
 import { tools } from '@/config/tools';
+
 
 export const getOptions = (type: string) => {
   switch (type) {
@@ -60,6 +63,9 @@ export const parseReadableStream = async (stream: ReadableStream<Uint8Array<Arra
         continue;
       }
       if (text.includes('</thinking>')) {
+        if (text !== '</thinking>') {
+          thinking += text.replace('</thinking>', '');
+        }
         isReasoning = false;
         onThinkingEnd();
         continue;
