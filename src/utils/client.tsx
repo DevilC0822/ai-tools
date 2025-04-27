@@ -70,8 +70,15 @@ export const parseReadableStream = async (stream: ReadableStream<Uint8Array<Arra
         onThinkingEnd();
         continue;
       }
+      if (isReasoning) {
+        thinking += text;
+      } else {
+        content += text;
+      }
+      onchange(thinking, content);
       if (text.includes('[DONE]')) {
         let result = content || text.replace('[DONE]', '');
+        console.log(result);
         if (output === 'json') {
           if (result.includes('```json')) {
             // 取出 ```json 和 ``` 之间的内容
@@ -86,12 +93,6 @@ export const parseReadableStream = async (stream: ReadableStream<Uint8Array<Arra
         onEnd(thinking, result);
         break;
       }
-      if (isReasoning) {
-        thinking += text;
-      } else {
-        content += text;
-      }
-      onchange(thinking, content);
     }
   } catch (error) {
     console.error(error);
