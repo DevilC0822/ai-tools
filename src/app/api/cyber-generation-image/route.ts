@@ -6,16 +6,18 @@ export async function POST(request: NextRequest) {
   return Execution(async () => {
     const params = await request.json();
     const { model, prompt, ...rest } = params;
+    const translatePrompt = `Translate the following text to English: ${prompt}`;
     const check = await checkModelBalance(model);
     if (!check.success) {
       return ErrorResponse(check.message);
     }
+
     if (model.includes('gemini')) {
       const result = await imageGenerateForGoogleGenAI({
         model,
         type: '3',
         contents: [
-          { text: prompt },
+          { text: translatePrompt },
         ],
       });
       if (typeof result === 'string') {
@@ -25,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
     const result = await imageGenerateForOpenAI({
       model,
-      prompt,
+      prompt: translatePrompt,
       type: '3',
       ...rest,
     });

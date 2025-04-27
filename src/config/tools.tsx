@@ -49,7 +49,6 @@ export const tools: Tool = {
     miniDescription: '输入文字，即刻生成高清图像。Artificium Canvas提供30+艺术风格、10秒极速出图。设计师、营销人、内容创作者的AI画布，让想象力突破工具限制。',
     btnText: '开始生成',
   },
-  // 赛博解梦
   'cyber-dream-interpretation': {
     label: '🛌 赛博解梦',
     type: '4',

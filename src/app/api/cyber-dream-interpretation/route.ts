@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
         {
           role: 'user',
           content: `
-          请根据现有信息，给出命主的命盘解析
+            根据现有信息，解析梦境
           `,
         },
       ],
