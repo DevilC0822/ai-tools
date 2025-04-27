@@ -71,7 +71,7 @@ export const parseReadableStream = async (stream: ReadableStream<Uint8Array<Arra
         continue;
       }
       if (text.includes('[DONE]')) {
-        let result = content;
+        let result = content || text;
         if (output === 'json') {
           if (result.includes('```json')) {
             // 取出 ```json 和 ``` 之间的内容
