@@ -82,8 +82,10 @@ export default function CyberCelebrityResumePage() {
       onEnd: (_thinking, result) => {
         setIsStreaming(false);
         if (typeof result === 'string') {
-          // 匹配 ```html 和 ``` 之间的内容
-          const html = result.match(/```html\s*([\s\S]*?)\s*```/)?.[1] || '';
+          console.log(result);
+          // 匹配 ```html 和 ``` 之间的所有内容 忽略大小写
+          const html = result.match(/```html\s*([\s\S]*?)\s*```/i)?.[1] || '';
+          console.log(html);
           if (html) {
             setResult(html);
           } else {
