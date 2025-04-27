@@ -210,6 +210,7 @@ export const getStreamData = (completion: unknown, {
         if (count === 0) {
           controller.enqueue(new TextEncoder().encode('[服务器繁忙，请稍后再试。]'));
         } else {
+          await new Promise(resolve => setTimeout(resolve, 100));
           controller.enqueue(new TextEncoder().encode('[DONE]'));
         }
         controller.close();
